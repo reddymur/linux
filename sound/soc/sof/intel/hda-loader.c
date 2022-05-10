@@ -372,7 +372,7 @@ static int hda_dsp_boot_imr(struct snd_sof_dev *sdev)
 	int ret;
 
 	ret = cl_dsp_init(sdev, 0, true);
-	if (!ret)
+	if (ret >= 0)
 		hda_sdw_process_wakeen(sdev);
 
 	return ret;
@@ -393,8 +393,8 @@ int hda_dsp_cl_boot_firmware(struct snd_sof_dev *sdev)
 		dev_dbg(sdev->dev, "IMR restore supported, booting from IMR directly\n");
 		hda->boot_iteration = 0;
 		ret = hda_dsp_boot_imr(sdev);
-		if (!ret)
-			return 0;
+		if (ret >= 0)
+			return ret;
 
 		dev_warn(sdev->dev, "IMR restore failed, trying to cold boot\n");
 	}
